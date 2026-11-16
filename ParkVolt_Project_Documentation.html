@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ParkVolt – Comprehensive Project Documentation & Architecture</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+    @page {
+      size: A4 portrait;
+      margin: 18mm 16mm 18mm 16mm;
+      @bottom-right {
+        content: counter(page);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 9pt;
+        color: #64748B;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #0F172A;
+      background-color: #FFFFFF;
+      line-height: 1.55;
+      font-size: 10pt;
+    }
+
+    .page {
+      page-break-after: always;
+      position: relative;
+    }
+
+    .page:last-child {
+      page-break-after: avoid;
+    }
+
+    /* Cover Page */
+    .cover {
+      height: 92vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 2px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 48px;
+      background: linear-gradient(145deg, #F8FAFC 0%, #EFF6FF 100%);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 14px;
+      font-size: 8.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-radius: 9999px;
+    }
+
+    .badge-primary { background: #DBEAFE; color: #1E40AF; }
+    .badge-success { background: #D1FAE5; color: #065F46; }
+    .badge-violet { background: #EDE9FE; color: #5B21B6; }
+
+    h1.project-title {
+      font-size: 34pt;
+      font-weight: 800;
+      line-height: 1.1;
+      color: #0F172A;
+      margin-top: 20px;
+      letter-spacing: -0.03em;
+    }
+
+    h1.project-title span {
+      color: #2F6BFF;
+    }
+
+    .project-subtitle {
+      font-size: 13pt;
+      font-weight: 500;
+      color: #475569;
+      margin-top: 14px;
+      max-width: 90%;
+      line-height: 1.5;
+    }
+
+    .meta-box {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+    }
+
+    .meta-item {
+      font-size: 9pt;
+    }
+
+    .meta-item .label {
+      color: #64748B;
+      text-transform: uppercase;
+      font-size: 7.5pt;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 3px;
+    }
+
+    .meta-item .value {
+      font-weight: 700;
+      color: #0F172A;
+    }
+
+    /* Headings */
+    h2.section-title {
+      font-size: 16pt;
+      font-weight: 800;
+      color: #0F172A;
+      border-bottom: 2px solid #2F6BFF;
+      padding-bottom: 6px;
+      margin-top: 24px;
+      margin-bottom: 14px;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h3.subsection-title {
+      font-size: 11.5pt;
+      font-weight: 700;
+      color: #1E293B;
+      margin-top: 16px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      margin-bottom: 10px;
+      color: #334155;
+      text-align: justify;
+    }
+
+    /* Cards & Grids */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 12px 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin: 12px 0;
+    }
+
+    .card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      break-inside: avoid;
+    }
+
+    .card-title {
+      font-size: 9.5pt;
+      font-weight: 700;
+      color: #0F172A;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-desc {
+      font-size: 8.5pt;
+      color: #64748B;
+      line-height: 1.45;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 16px 0;
+      font-size: 8.5pt;
+      break-inside: avoid;
+    }
+
+    th, td {
+      padding: 8px 10px;
+      text-align: left;
+      border: 1px solid #E2E8F0;
+    }
+
+    th {
+      background-color: #F1F5F9;
+      font-weight: 700;
+      color: #0F172A;
+      text-transform: uppercase;
+      font-size: 7.5pt;
+      letter-spacing: 0.04em;
+    }
+
+    tr:nth-child(even) td {
+      background-color: #F8FAFC;
+    }
+
+    /* Code Blocks */
+    pre, code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    pre {
+      background-color: #0F172A;
+      color: #F8FAFC;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 8pt;
+      line-height: 1.45;
+      overflow-x: auto;
+      margin: 10px 0 14px 0;
+      break-inside: avoid;
+    }
+
+    code.inline-code {
+      background: #F1F5F9;
+      color: #2F6BFF;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 8pt;
+      font-weight: 600;
+    }
+
+    /* Architecture Visual Blocks */
+    .arch-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .arch-step {
+      background: #F8FAFC;
+      border-left: 4px solid #2F6BFF;
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      border-top: 1px solid #E2E8F0;
+      border-right: 1px solid #E2E8F0;
+      border-bottom: 1px solid #E2E8F0;
+    }
+
+    .arch-step-title {
+      font-weight: 700;
+      font-size: 9pt;
+      color: #0F172A;
+    }
+
+    .arch-step-body {
+      font-size: 8.2pt;
+      color: #475569;
+      margin-top: 2px;
+    }
+
+    .highlight-box {
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin: 12px 0;
+      font-size: 8.8pt;
+      color: #1E3A8A;
+      break-inside: avoid;
+    }
+
+    .highlight-box strong {
+      color: #1E40AF;
+    }
+
+    .qa-box {
+      margin-bottom: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      break-inside: avoid;
+    }
+
+    .qa-q {
+      font-weight: 700;
+      color: #1E293B;
+      font-size: 9pt;
+      margin-bottom: 4px;
+    }
+
+    .qa-a {
+      font-size: 8.5pt;
+      color: #475569;
+      line-height: 1.45;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= PAGE 1: COVER PAGE ================= -->
+  <div class="page">
+    <div class="cover">
+      <div>
+        <span class="badge badge-primary">Final Year B.Tech Computer Science Project Report</span>
+        <h1 class="project-title">ParkVolt <span>3D</span></h1>
+        <p class="project-subtitle">
+          Next-Generation Smart Parking & EV Supercharging Finder with WebGL Digital-Twin Telemetry and Browser Cryptography
+        </p>
+      </div>
+
+      <div style="margin: 30px 0;">
+        <div class="grid-3">
+          <div class="card" style="border-top: 3px solid #2F6BFF;">
+            <div class="card-title">Frontend Core</div>
+            <div class="card-desc">React 18 + Vite SPA, React Router DOM, Pure CSS Variables Architecture.</div>
+          </div>
+          <div class="card" style="border-top: 3px solid #10B981;">
+            <div class="card-title">3D WebGL Engine</div>
+            <div class="card-desc">Three.js, @react-three/fiber, @react-three/drei, GPU Shader Pipelines.</div>
+          </div>
+          <div class="card" style="border-top: 3px solid #7C5CFF;">
+            <div class="card-title">Security & State</div>
+            <div class="card-desc">W3C Web Cryptography SHA-256, React Context, LocalStorage Persistence.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="meta-box">
+        <div class="meta-item">
+          <div class="label">Project Title</div>
+          <div class="value">ParkVolt – Smart Parking & EV Charging Finder</div>
+        </div>
+        <div class="meta-item">
+          <div class="label">Architecture Model</div>
+          <div class="value">Client-Side Digital-Twin Single Page Application (SPA)</div>
+        </div>
+        <div class="meta-item">
+          <div class="label">Target Platform</div>
+          <div class="value">Cross-Platform Web (macOS, Windows, iOS, Android)</div>
+        </div>
+        <div class="meta-item">
+          <div class="label">Evaluation Purpose</div>
+          <div class="value">B.Tech Engineering Viva & Project Defense</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PAGE 2: ARCHITECTURE & ROADMAP ================= -->
+  <div class="page">
+    <h2 class="section-title">1. Executive Overview & System Architecture</h2>
+    <p>
+      <strong>ParkVolt</strong> is a smart mobility platform designed to solve urban parking congestion and streamline electric vehicle (EV) charging reservations across major metropolitan cities. The platform provides real-time telemetry representation, dynamic slot reservations, cryptographic authentication, and simulated IoT sensor monitoring without relying on external server latency or database downtime.
+    </p>
+
+    <h3 class="subsection-title">1.1 Three-Tier Client Architecture</h3>
+    <p>
+      The system is designed with a strict separation of concerns into three foundational layers:
+    </p>
+
+    <div class="arch-flow">
+      <div class="arch-step" style="border-left-color: #2F6BFF;">
+        <div class="arch-step-title">Tier 1: Presentation & WebGL Canvas Layer</div>
+        <div class="arch-step-body">
+          Renders 10 responsive user pages and the interactive 3D digital-twin city island via WebGL on the client GPU. Manages lighting adaptation for Day/Night modes and handles user pointer raycasting events.
+        </div>
+      </div>
+      <div class="arch-step" style="border-left-color: #10B981;">
+        <div class="arch-step-title">Tier 2: Business Logic & State Management Layer</div>
+        <div class="arch-step-body">
+          Built using React Context API (<code class="inline-code">BookingContext</code>, <code class="inline-code">AuthContext</code>, <code class="inline-code">ThemeContext</code>). Executes the real-time 4-second sensor fluctuation engine, client-side SHA-256 Web Crypto hashing, and mathematical interval collision prevention algorithms.
+        </div>
+      </div>
+      <div class="arch-step" style="border-left-color: #7C5CFF;">
+        <div class="arch-step-title">Tier 3: Persistence & Mock Data Layer</div>
+        <div class="arch-step-body">
+          Pre-seeds authentic municipal parking locations and high-speed DC charging stations from structured JSON files, while maintaining persistent user sessions, booking passes, and digital wallet balances inside the browser's <code class="inline-code">localStorage</code>.
+        </div>
+      </div>
+    </div>
+
+    <h3 class="subsection-title">1.2 Project Development Roadmap</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Phase</th>
+          <th>Milestone</th>
+          <th>Deliverables & Key Technical Outputs</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Phase 1</strong></td>
+          <td>Core Foundations</td>
+          <td>Vite + React 18 scaffolding, CSS Variables Design System, Plus Jakarta Sans typography, Unsplash curated photo assets.</td>
+        </tr>
+        <tr>
+          <td><strong>Phase 2</strong></td>
+          <td>3D Digital-Twin</td>
+          <td>Low-poly floating island, multi-tier illuminated skyscrapers, wind turbine, solar canopy EV hub, looping traffic, and raycasted slots.</td>
+        </tr>
+        <tr>
+          <td><strong>Phase 3</strong></td>
+          <td>State & Security</td>
+          <td>4-second simulated IoT sensor engine, timestamp interval collision prevention algorithm, and client-side SHA-256 Web Crypto hashing.</td>
+        </tr>
+        <tr>
+          <td><strong>Phase 4</strong></td>
+          <td>Multi-Page Routing</td>
+          <td>10 functional pages: Catalog search, EV connector filter matrix, 3D slot reservation, demo payment gateway, SVG QR tickets.</td>
+        </tr>
+        <tr>
+          <td><strong>Phase 5</strong></td>
+          <td>Optimization & Polish</td>
+          <td>Mobile Bottom Navigation, React ErrorBoundary safeguard, responsive viewport layout, and B.Tech viva defense documentation.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ================= PAGE 3: STEP-BY-STEP WORKFLOW ================= -->
+  <div class="page">
+    <h2 class="section-title">2. End-to-End System Workflow (Step-by-Step)</h2>
+    <p>
+      The complete user lifecycle follows an automated 7-step sequence from discovery to active gate verification and refund execution:
+    </p>
+
+    <div class="arch-flow">
+      <div class="arch-step">
+        <div class="arch-step-title">Step 1: System Theme & 3D Lighting Adaptation</div>
+        <div class="arch-step-body">
+          When a user opens the app, <code class="inline-code">ThemeContext</code> checks <code class="inline-code">prefers-color-scheme</code> or saved user preferences. In Light Mode, the 3D scene renders an ambient daylight sky; in Dark Mode, it dynamically illuminates building windows, streetlamps, and car headlights while switching page CSS variables.
+        </div>
+      </div>
+
+      <div class="arch-step">
+        <div class="arch-step-title">Step 2: Exploration & Search Query Propagation</div>
+        <div class="arch-step-body">
+          Users explore the 3D island or submit search queries from the landing hero. Entering a query redirects to <code class="inline-code">/find-parking?q=City</code>, filtering initial seed data by facility name, city, and parking amenities (Covered, EV, CCTV).
+        </div>
+      </div>
+
+      <div class="arch-step">
+        <div class="arch-step-title">Step 3: EV Charger Filter Matrix</div>
+        <div class="arch-step-body">
+          Navigating to <code class="inline-code">/find-ev</code> enables multi-variable filtering across Indian EV standards: Type 2, CCS2, CHAdeMO, Bharat AC001, and Bharat DC001, sorting chargers by power output (>50 kW fast superchargers) and availability.
+        </div>
+      </div>
+
+      <div class="arch-step">
+        <div class="arch-step-title">Step 4: Interactive 3D Slot Selection & Pricing Formula</div>
+        <div class="arch-step-body">
+          On <code class="inline-code">/parking/:id</code>, the 3D slot picker allows users to click open bays directly in WebGL. Users select a reservation start time and duration (30 min to 24 hrs). The system computes total cost dynamically: <em>Subtotal = Rate × Hours</em>, adding an itemized 18% GST tax breakdown.
+        </div>
+      </div>
+
+      <div class="arch-step">
+        <div class="arch-step-title">Step 5: Pre-Checkout Double-Booking Collision Check</div>
+        <div class="arch-step-body">
+          Before finalizing checkout, the system invokes <code class="inline-code">checkDoubleBooking()</code>. It performs interval collision checks against all active reservations. If an overlap exists, it halts checkout and notifies the user with a collision alert toast.
+        </div>
+      </div>
+
+      <div class="arch-step">
+        <div class="arch-step-title">Step 6: Payment Execution & Wallet Ledgering</div>
+        <div class="arch-step-body">
+          Users select UPI (VPA format check), Credit/Debit Card (Luhn format check), or 1-Click ParkVolt Prepaid Wallet. Transactions are logged into an immutable digital ledger in <code class="inline-code">localStorage</code>.
+        </div>
+      </div>
+
+      <div class="arch-step">
+        <div class="arch-step-title">Step 7: Dynamic SVG QR Ticket, Extension & Cancellation</div>
+        <div class="arch-step-body">
+          The user is redirected to <code class="inline-code">/ticket/:id</code> where an encrypted SVG QR code is generated via <code class="inline-code">qrcode.react</code> alongside a real-time countdown. Users can extend by +30 minutes or cancel to receive an instant 100% wallet refund.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PAGE 4: CODEBASE BLUEPRINT ================= -->
+  <div class="page">
+    <h2 class="section-title">3. Codebase Blueprint: Component & Module Breakdown</h2>
+    <p>
+      The table below provides a complete index of all source files in the project and explains the specific engineering responsibility of each file:
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>File Path</th>
+          <th>Layer / Role</th>
+          <th>Key Functions & Responsibilities</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code class="inline-code">src/main.jsx</code></td>
+          <td>Application Entry</td>
+          <td>Mounts React 18 root, imports design system CSS, and renders main application shell.</td>
+        </tr>
+        <tr>
+          <td><code class="inline-code">src/App.jsx</code></td>
+          <td>Router & Layout Shell</td>
+          <td>Defines all 10 route mappings, encapsulates context providers, and injects ErrorBoundary.</td>
+        </tr>
+        <tr>
+          <td><code class="inline-code">src/context/ThemeContext.jsx</code></td>
+          <td>Theme Engine</td>
+          <td>Manages Light/Dark/Auto modes, observes system color scheme, updates HTML root data-theme.</td>
+        </tr>
+        <tr>
+          <td><code class="inline-code">src/context/AuthContext.jsx</code></td>
+          <td>Security & Auth</td>
+          <td>Executes SHA-256 Web Crypto hashing, registers users, seeds demo user alex@parkvolt.com.</td>
+        </tr>
+        <tr>
+          <td><code class="inline-code">src/context/BookingContext.jsx</code></td>
+          <td>Core State Engine</td>
+          <td>4s sensor simulator, double-booking prevention algorithm, wallet ledger, active tickets.</td>
+        </tr>
+        <tr>
+          <td><code class="inline-code">src/components/3d/FloatingCityScene.jsx</code></td>
+          <td>3D WebGL Digital Twin</td>
+          <td>Three.js Canvas, animated cars, pedestrians, lit skyscrapers, solar EV hub, interactive slots.</td>
+        </tr>
+        <tr>
+          <td><code class="inline-code">src/components/layout/Navbar.jsx</code></td>
+          <td>Global Navigation</td>
+          <td>Sticky header, brand logo, simulated data pill, theme toggle menu, and live wallet chip.</td>
+        </tr>
+        <tr>
+          <td><code class="inline-code">src/components/layout/BottomNav.jsx</code></td>
+          <td>Mobile Dock</td>
+          <td>Fixed bottom navigation bar for viewports &lt;768px with active route indicators.</td>
+        </tr>
+        <tr>
+          <td><code class="inline-code">src/components/layout/Footer.jsx</code></td>
+          <td>Global Footer</td>
+          <td>Comprehensive footer with INR compliance disclosure, sitemap links, and Unsplash photo credits.</td>
+        </tr>
+        <tr>
+          <td><code class="inline-code">src/pages/LandingPage.jsx</code></td>
+          <td>Route: <code class="inline-code">/</code></td>
+          <td>Landing hero, 3D island embed, search box, live telemetry counters, FAQ accordion.</td>
+        </tr>
+        <tr>
+          <td><code class="inline-code">src/pages/FindParkingPage.jsx</code></td>
+          <td>Route: <code class="inline-code">/find-parking</code></td>
+          <td>Faceted parking facility catalog with price slider, distance, availability, and amenities.</td>
+        </tr>
+        <tr>
+          <td><code class="inline-code">src/pages/ParkingDetailPage.jsx</code></td>
+          <td>Route: <code class="inline-code">/parking/:id</code></td>
+          <td>3D slot picker, time/duration selectors, 18% GST tax calculator, Google Maps link.</td>
+        </tr>
+        <tr>
+          <td><code class="inline-code">src/pages/FindEvChargingPage.jsx</code></td>
+          <td>Route: <code class="inline-code">/find-ev</code></td>
+          <td>EV charging stations catalog with connector filters (CCS2, Type 2, Bharat DC) and speeds.</td>
+        </tr>
+        <tr>
+          <td><code class="inline-code">src/pages/CheckoutPage.jsx</code></td>
+          <td>Route: <code class="inline-code">/checkout</code></td>
+          <td>Itemized order review, double-booking verification, mock UPI/Card/Wallet validation.</td>
+        </tr>
+        <tr>
+          <td><code class="inline-code">src/pages/BookingTicketPage.jsx</code></td>
+          <td>Route: <code class="inline-code">/ticket/:id</code></td>
+          <td>Live SVG QR code generation, countdown timer, +30 min extension, and refund cancellation.</td>
+        </tr>
+        <tr>
+          <td><code class="inline-code">src/pages/MyBookingsPage.jsx</code></td>
+          <td>Route: <code class="inline-code">/my-bookings</code></td>
+          <td>Segmented tabs (Upcoming, Active, Past) displaying user reservations saved in localStorage.</td>
+        </tr>
+        <tr>
+          <td><code class="inline-code">src/pages/WalletPage.jsx</code></td>
+          <td>Route: <code class="inline-code">/wallet</code></td>
+          <td>Digital wallet card, INR balance, instant top-up chips (+₹200, +₹500), transaction history.</td>
+        </tr>
+        <tr>
+          <td><code class="inline-code">src/pages/AuthPage.jsx</code></td>
+          <td>Route: <code class="inline-code">/login</code></td>
+          <td>Unified login and registration forms with validation and demo login helper buttons.</td>
+        </tr>
+        <tr>
+          <td><code class="inline-code">src/pages/NotFoundPage.jsx</code></td>
+          <td>Route: <code class="inline-code">*</code></td>
+          <td>Clean 404 error page with navigation shortcuts back to safety.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ================= PAGE 5: ALGORITHMIC DEEP DIVE & VIVA Q&A ================= -->
+  <div class="page">
+    <h2 class="section-title">4. Algorithmic Deep-Dive & Viva Defense Guide</h2>
+
+    <h3 class="subsection-title">4.1 Double-Booking Collision Prevention Formula</h3>
+    <p>
+      In <code class="inline-code">BookingContext.jsx</code>, the collision algorithm prevents two users from reserving the same bay for overlapping durations. Mathematically, two time intervals <em>[S<sub>1</sub>, E<sub>1</sub>]</em> and <em>[S<sub>2</sub>, E<sub>2</sub>]</em> overlap if and only if:
+    </p>
+    <div class="highlight-box">
+      <strong>Overlap Condition:</strong> (ExistingStart &lt; RequestedEnd) AND (ExistingEnd &gt; RequestedStart)<br>
+      If this condition returns <code>true</code> for any non-cancelled booking on the requested slot, reservation is rejected.
+    </div>
+
+    <pre><code>// Implemented in BookingContext.jsx
+const checkDoubleBooking = (slotCode, startTime, endTime) => {
+  const reqStart = new Date(startTime).getTime();
+  const reqEnd = new Date(endTime).getTime();
+
+  return bookings.some((b) => {
+    if (b.slotCode !== slotCode || b.status === "cancelled") return false;
+    const bStart = new Date(b.startTime).getTime();
+    const bEnd = new Date(b.endTime).getTime();
+    return bStart &lt; reqEnd &amp;&amp; bEnd &gt; reqStart; // Collision detected
+  });
+};</code></pre>
+
+    <h3 class="subsection-title">4.2 Top 5 Viva Questions & Model Answers</h3>
+
+    <div class="qa-box">
+      <div class="qa-q">Q1: How is high 3D rendering performance achieved without lag or stutter?</div>
+      <div class="qa-a">
+        <strong>Ans:</strong> We capped the WebGL pixel ratio to <code>dpr={[1, 2]}</code> to prevent GPU saturation on high-DPI displays. All 3D objects use low-polygon geometric primitives (boxes, cylinders, cones), and animations are updated inside the Three.js <code>useFrame()</code> hook using delta time instead of triggering React state re-renders.
+      </div>
+    </div>
+
+    <div class="qa-box">
+      <div class="qa-q">Q2: Why use the W3C Web Cryptography API instead of plain text storage?</div>
+      <div class="qa-a">
+        <strong>Ans:</strong> Storing passwords as plain text in <code>localStorage</code> is vulnerable to Cross-Site Scripting (XSS). By hashing passwords using <code>crypto.subtle.digest("SHA-256", ...)</code>, user passwords are converted into a one-way hexadecimal hash before being stored or evaluated.
+      </div>
+    </div>
+
+    <div class="qa-box">
+      <div class="qa-q">Q3: How does the system simulate real-time IoT parking sensors?</div>
+      <div class="qa-a">
+        <strong>Ans:</strong> A lightweight background interval runs every 4 seconds in <code>BookingContext</code>. It randomly fluctuates bay occupancy by ±1 to simulate live ultrasonic sensors and ANPR camera feeds, while transparently displaying a "Simulated data" badge across the interface.
+      </div>
+    </div>
+
+    <div class="qa-box">
+      <div class="qa-q">Q4: How does the application prevent blank white screens if a component fails?</div>
+      <div class="qa-a">
+        <strong>Ans:</strong> The application incorporates a top-level React <code>ErrorBoundary</code> in <code>App.jsx</code> that implements <code>getDerivedStateFromError()</code> and <code>componentDidCatch()</code>. If any child component encounters an exception, it displays a friendly error interface with a one-click reload button rather than unmounting the entire DOM.
+      </div>
+    </div>
+
+    <div class="qa-box">
+      <div class="qa-q">Q5: How does the dynamic QR ticket work?</div>
+      <div class="qa-a">
+        <strong>Ans:</strong> We use <code>qrcode.react</code> to generate a vector SVG QR code. It encodes a structured JSON payload containing the Booking ID, Slot Code, User ID, and cryptographic timestamp, allowing smart barrier scanners to parse and validate entrance permits instantly.
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "parkvolt-smart-parking-ev-finder",
+  "version": "1.0.0",
+  "description": "ParkVolt - Real-Time Smart Parking & EV Charging Mesh System",
+  "scripts": {
+    "start:client": "cd client && npm run dev",
+    "start:server": "cd server && npm run dev",
+    "build:client": "cd client && npm run build",
+    "seed": "cd server && npm run seed"
+  },
+  "keywords": [
+    "smart-parking",
+    "ev-charging",
+    "threejs",
+    "socketio",
+    "mern",
+    "iot"
+  ],
+  "author": "ParkVolt Team",
+  "license": "MIT"
+}
